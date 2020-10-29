@@ -9,6 +9,7 @@ export class AuthService {
 
   private url = 'https://identitytoolkit.googleapis.com/v1/accounts:';
   private apiKey = 'AIzaSyCLC2dMBcAL0s1hSyP5yu1DFhi5h96O7-o';
+  userToken:string;
 
   constructor(private http:HttpClient) { }
 
@@ -45,4 +46,22 @@ export class AuthService {
       authData
     );
   }
+
+  private saveToken(idToken:string) {
+
+    this.userToken = idToken;
+    localStorage.setItem('token', idToken);
+
+  }
+
+  readToken() {
+    if (localStorage.getItem('token')) {
+      this.userToken = localStorage.getItem('token');
+    } else {
+      this.userToken = "";
+    }
+
+    return this.userToken;
+  }
+
 }
