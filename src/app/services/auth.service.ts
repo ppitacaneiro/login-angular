@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UsuarioModel } from '../models/usuario.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class AuthService {
   private apiKey = 'AIzaSyCLC2dMBcAL0s1hSyP5yu1DFhi5h96O7-o';
   userToken:string;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) {
+      this.readToken();
+  }
 
   logout() {
 
@@ -29,6 +32,11 @@ export class AuthService {
     (
       `${ this.url }signInWithPassword?key=${ this.apiKey }`,
       authData
+    ).pipe(
+      map( response => {
+        this.saveToken(response['idToken']);
+        return response;
+      })
     );
   }
 
@@ -44,6 +52,11 @@ export class AuthService {
     (
       `${ this.url }signUp?key=${ this.apiKey }`,
       authData
+    ).pipe(
+      map( response => {
+        this.saveToken(response['idToken']);
+        return response;
+      })
     );
   }
 
